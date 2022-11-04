@@ -1,0 +1,17 @@
+node_modules
+todo.*
+
+# configuration
+.env
+config.json
+src/api/config.js
+api/config.js
+
+# logs
+src/logs/*
+logs
+*.log
+
+# dump
+src/test
+test/

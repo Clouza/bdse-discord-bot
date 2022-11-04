@@ -1,0 +1,21 @@
+{
+  "name": "bdse",
+  "version": "1.0.0",
+  "description": "BDSE Official Bot",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "nodemon ./src/test/index.js"
+  },
+  "author": "Clouza",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.6.0",
+    "firebase": "^9.12.1"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.20"
+  }
+}
