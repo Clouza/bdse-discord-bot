@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("discord.js");
 const { onValue, ref } = require("firebase/database");
 const db = new (require("../api/index.js"))("../api/config.js");
 const agreement = require("./agreement.js");
+const Number = require("../helpers/number.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,8 +14,10 @@ module.exports = {
       (snapshot) => {
         if (snapshot.exists()) {
           interaction.reply({
-            ephemeral: true,
-            content: `Current balance: __**$${snapshot.val()}**__`,
+            ephemeral: false,
+            content: `Current balance: __**$${new Number(
+              snapshot.val()
+            ).commaSeparator()}**__`,
           });
         } else {
           agreement.execute(interaction);

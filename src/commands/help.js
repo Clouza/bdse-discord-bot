@@ -58,7 +58,7 @@ module.exports = {
         },
         {
           name: "Coin Flip",
-          value: "!cf [money] - Fill in the parameter [money] to place a bet",
+          value: "!cf (money) - Fill in the parameter (money) to place a bet",
         }
       )
       .setFooter({
@@ -66,7 +66,7 @@ module.exports = {
       });
 
     interaction.reply({
-      ephemeral: true,
+      ephemeral: false,
       embeds: [help],
     });
   },

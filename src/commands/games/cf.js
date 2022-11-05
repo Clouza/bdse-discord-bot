@@ -11,7 +11,7 @@ const db = new (require("../../api/index.js"))("../api/config.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("coinflip")
+    .setName("cf")
     .setDescription("Bet your lucky with Coin Flip 💸")
     .addNumberOption((option) =>
       option
@@ -23,13 +23,13 @@ module.exports = {
     const headTail = new ActionRowBuilder()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("head")
+          .setCustomId(`head-${interaction.user.id}`)
           .setLabel("Head")
           .setStyle(ButtonStyle.Primary)
       )
       .addComponents(
         new ButtonBuilder()
-          .setCustomId("tail")
+          .setCustomId(`tail-${interaction.user.id}`)
           .setLabel("Tail")
           .setStyle(ButtonStyle.Primary)
       );
@@ -63,6 +63,8 @@ module.exports = {
   },
   buttonTrigger(interaction) {
     const user = interaction.user;
+    console.log();
+
     onValue(
       ref(db, `users/${user.id}`),
       (snapshot) => {
@@ -79,37 +81,48 @@ module.exports = {
         };
 
         let bet = null;
-        if (userChoose === icon[random]) {
-          const data = snapshot.val();
-          data.balance = data.balance + money * 2;
-          set(ref(db, `users/${user.id}`), data);
 
-          bet = new Number(money * 2).commaSeparator();
-          interaction.update({
-            ephemeral: true,
-            content: content(
-              user,
-              bet,
-              icon[random],
-              `Congrats ${user} get __**$${bet}**__`
-            ),
-            components: [],
-          });
+        if (interaction.customId.endsWith(interaction.user.id)) {
+          if (userChoose === icon[random]) {
+            const data = snapshot.val();
+            data.balance = data.balance + money * 2;
+            set(ref(db, `users/${user.id}`), data);
+
+            bet = new Number(money * 2).commaSeparator();
+            interaction.update({
+              ephemeral: true,
+              content: content(
+                user,
+                bet,
+                icon[random],
+                `Congrats ${user} get __**$${bet}**__`
+              ),
+              components: [],
+            });
+          } else {
+            const data = snapshot.val();
+            data.balance = data.balance - money;
+            if (data.balance < 0) {
+              data.balance = 0;
+            }
+            set(ref(db, `users/${user.id}`), data);
+
+            bet = new Number(money).commaSeparator();
+            interaction.update({
+              ephemeral: true,
+              content: content(
+                user,
+                bet,
+                icon[random],
+                `${user} lost __**$${bet}**__`
+              ),
+              components: [],
+            });
+          }
         } else {
-          const data = snapshot.val();
-          data.balance = data.balance - money;
-          set(ref(db, `users/${user.id}`), data);
-
-          bet = new Number(money).commaSeparator();
-          interaction.update({
+          interaction.reply({
             ephemeral: true,
-            content: content(
-              user,
-              bet,
-              icon[random],
-              `${user} lost __**$${bet}**__`
-            ),
-            components: [],
+            content: "This button is not for you",
           });
         }
       },

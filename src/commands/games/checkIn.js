@@ -11,7 +11,7 @@ module.exports = {
   execute(interaction) {
     const userId = interaction.user.id;
     const currentDate = new Date().getTime();
-    const nextCheckIn = currentDate + 24 * 60 * 60;
+    const nextCheckIn = Math.floor(currentDate / 1000 + 60 * 60 * 24);
 
     onValue(
       ref(db, `users/${userId}`),

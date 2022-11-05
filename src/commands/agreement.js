@@ -59,6 +59,7 @@ module.exports = {
       agreement: true,
       balance: 0,
       checkIn: 0,
+      username: interaction.user.username,
     });
   },
   agreementEmbed() {
